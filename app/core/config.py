@@ -1,7 +1,9 @@
 """
 Application configuration settings.
 """
+
 from typing import Literal
+
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -10,6 +12,7 @@ class Settings(BaseSettings):
     """
     Application settings loaded from environment variables.
     """
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -26,9 +29,7 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(default=True, description="Debug mode")
 
     # Database Configuration
-    DATABASE_URL: str = Field(
-        ..., description="PostgreSQL database URL"
-    )
+    DATABASE_URL: str = Field(..., description="PostgreSQL database URL")
     DB_POOL_SIZE: int = Field(default=20, description="Database pool size")
     DB_MAX_OVERFLOW: int = Field(default=10, description="Max overflow connections")
     DB_POOL_TIMEOUT: int = Field(default=30, description="Pool timeout in seconds")
@@ -92,9 +93,7 @@ class Settings(BaseSettings):
 
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = Field(default=True, description="Enable rate limiting")
-    RATE_LIMIT_REQUESTS: int = Field(
-        default=100, description="Max requests per window"
-    )
+    RATE_LIMIT_REQUESTS: int = Field(default=100, description="Max requests per window")
     RATE_LIMIT_WINDOW_MINUTES: int = Field(
         default=15, description="Rate limit window in minutes"
     )
@@ -116,4 +115,5 @@ class Settings(BaseSettings):
 
 
 # Global settings instance
-settings = Settings()
+# Settings will be loaded from .env file automatically by pydantic-settings
+settings = Settings()  # type: ignore[call-arg]

@@ -1,11 +1,13 @@
 """
 Logging configuration for the application.
 """
+
 import logging
 import sys
 from typing import Callable
 
 import structlog
+
 from app.core.config import settings
 
 

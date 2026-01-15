@@ -1,18 +1,21 @@
 """
 Email service for sending emails via SMTP.
 """
-from typing import Optional
-from email.mime.text import MIMEText
+
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from typing import Optional
+
 import aiosmtplib
 from jinja2 import Template
+
 from app.core.config import settings
 from app.core.logging import logger
 
 
 class EmailService:
     """Service for sending emails."""
-    
+
     @staticmethod
     async def send_email(
         to_email: str,
@@ -22,35 +25,35 @@ class EmailService:
     ) -> bool:
         """
         Send an email via SMTP.
-        
+
         Args:
             to_email: Recipient email address
             subject: Email subject
             html_content: HTML email content
             text_content: Plain text email content (optional)
-            
+
         Returns:
             bool: True if email sent successfully, False otherwise
         """
         if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
             logger.warning("⚠️  SMTP credentials not configured, skipping email send")
             return False
-        
+
         try:
             # Create message
             message = MIMEMultipart("alternative")
             message["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
             message["To"] = to_email
             message["Subject"] = subject
-            
+
             # Add text and HTML parts
             if text_content:
                 text_part = MIMEText(text_content, "plain")
                 message.attach(text_part)
-            
+
             html_part = MIMEText(html_content, "html")
             message.attach(html_part)
-            
+
             # Send email
             # Use start_tls for port 587 (most common), use_tls for port 465
             await aiosmtplib.send(
@@ -62,30 +65,31 @@ class EmailService:
                 start_tls=settings.SMTP_TLS if settings.SMTP_PORT == 587 else False,
                 use_tls=settings.SMTP_TLS if settings.SMTP_PORT == 465 else False,
             )
-            
+
             logger.info(f"✅ Email sent successfully to: {to_email}")
             return True
-            
+
         except Exception as e:
             logger.error(f"❌ Failed to send email to {to_email}: {e}")
             return False
-    
+
     @staticmethod
     async def send_signup_otp(email: str, name: str, otp: str) -> bool:
         """
         Send signup OTP email.
-        
+
         Args:
             email: User's email
             name: User's name
             otp: OTP code
-            
+
         Returns:
             bool: True if sent successfully
         """
         subject = "Verify Your Email - OTP Code"
-        
-        html_template = Template("""
+
+        html_template = Template(
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -119,29 +123,31 @@ class EmailService:
             </div>
         </body>
         </html>
-        """)
-        
+        """
+        )
+
         html_content = html_template.render(name=name, otp=otp)
         text_content = f"Hello {name}!\n\nYour verification code is: {otp}\n\nThis code will expire in 5 minutes."
-        
+
         return await EmailService.send_email(email, subject, html_content, text_content)
-    
+
     @staticmethod
     async def send_password_reset_otp(email: str, name: str, otp: str) -> bool:
         """
         Send password reset OTP email.
-        
+
         Args:
             email: User's email
             name: User's name
             otp: OTP code
-            
+
         Returns:
             bool: True if sent successfully
         """
         subject = "Password Reset - OTP Code"
-        
-        html_template = Template("""
+
+        html_template = Template(
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -178,28 +184,30 @@ class EmailService:
             </div>
         </body>
         </html>
-        """)
-        
+        """
+        )
+
         html_content = html_template.render(name=name, otp=otp)
         text_content = f"Hello {name}!\n\nYour password reset code is: {otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this, please ignore this email."
-        
+
         return await EmailService.send_email(email, subject, html_content, text_content)
-    
+
     @staticmethod
     async def send_password_reset_success(email: str, name: str) -> bool:
         """
         Send password reset success notification.
-        
+
         Args:
             email: User's email
             name: User's name
-            
+
         Returns:
             bool: True if sent successfully
         """
         subject = "Password Reset Successful"
-        
-        html_template = Template("""
+
+        html_template = Template(
+            """
         <!DOCTYPE html>
         <html>
         <head>
@@ -229,9 +237,10 @@ class EmailService:
             </div>
         </body>
         </html>
-        """)
-        
+        """
+        )
+
         html_content = html_template.render(name=name)
         text_content = f"Hello {name}!\n\nYour password has been successfully reset. You can now log in with your new password."
-        
+
         return await EmailService.send_email(email, subject, html_content, text_content)

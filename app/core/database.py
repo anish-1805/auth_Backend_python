@@ -1,14 +1,12 @@
 """
 Database configuration and session management.
 """
+
 from typing import AsyncGenerator
 from urllib.parse import quote_plus
+
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.pool import NullPool, QueuePool
 
@@ -25,20 +23,20 @@ if "@" in database_url:
         # Extract parts: postgresql://user:password@host:port/database
         protocol = database_url.split("://")[0]
         rest = database_url.split("://")[1]
-        
+
         # Split by last @ to separate credentials from host
         if "@" in rest:
             credentials_part = rest.rsplit("@", 1)[0]
             host_part = rest.rsplit("@", 1)[1]
-            
+
             # Split credentials into user and password
             if ":" in credentials_part:
                 user = credentials_part.split(":", 1)[0]
                 password = credentials_part.split(":", 1)[1]
-                
+
                 # URL encode the password
                 encoded_password = quote_plus(password)
-                
+
                 # Rebuild URL
                 database_url = f"{protocol}://{user}:{encoded_password}@{host_part}"
     except Exception as e:
@@ -78,7 +76,7 @@ Base = declarative_base()
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency to get database session.
-    
+
     Yields:
         AsyncSession: Database session
     """

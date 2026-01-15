@@ -1,8 +1,11 @@
 """
 Background tasks for async operations.
 """
+
 from typing import Callable
+
 from fastapi import BackgroundTasks
+
 from app.core.logging import logger
 from app.services.email_service import EmailService
 
@@ -10,7 +13,7 @@ from app.services.email_service import EmailService
 async def send_signup_otp_background(email: str, name: str, otp: str) -> None:
     """
     Background task to send signup OTP email.
-    
+
     Args:
         email: User's email
         name: User's name
@@ -29,7 +32,7 @@ async def send_signup_otp_background(email: str, name: str, otp: str) -> None:
 async def send_password_reset_otp_background(email: str, name: str, otp: str) -> None:
     """
     Background task to send password reset OTP email.
-    
+
     Args:
         email: User's email
         name: User's name
@@ -48,7 +51,7 @@ async def send_password_reset_otp_background(email: str, name: str, otp: str) ->
 async def send_password_reset_success_background(email: str, name: str) -> None:
     """
     Background task to send password reset success notification.
-    
+
     Args:
         email: User's email
         name: User's name
@@ -64,14 +67,11 @@ async def send_password_reset_success_background(email: str, name: str) -> None:
 
 
 def add_background_task(
-    background_tasks: BackgroundTasks,
-    task: Callable,
-    *args,
-    **kwargs
+    background_tasks: BackgroundTasks, task: Callable, *args, **kwargs
 ) -> None:
     """
     Add a background task to the queue.
-    
+
     Args:
         background_tasks: FastAPI BackgroundTasks instance
         task: Task function to execute

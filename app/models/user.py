@@ -1,10 +1,13 @@
 """
 User database model.
 """
+
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Boolean, String, DateTime, JSON, Text
+
+from sqlalchemy import JSON, Boolean, DateTime, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 
 
@@ -12,11 +15,10 @@ class User(Base):
     """
     User model for authentication and user management.
     """
+
     __tablename__ = "users"
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, index=True
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(
         String(255), unique=True, index=True, nullable=False
@@ -25,11 +27,9 @@ class User(Base):
     isEmailVerified: Mapped[bool] = mapped_column(
         "isEmailVerified", Boolean, default=False, nullable=False
     )
-    
+
     # OAuth fields
-    provider: Mapped[str] = mapped_column(
-        String(50), default="local", nullable=False
-    )
+    provider: Mapped[str] = mapped_column(String(50), default="local", nullable=False)
     providerId: Mapped[Optional[str]] = mapped_column(
         "providerId", String(255), nullable=True
     )
@@ -37,7 +37,7 @@ class User(Base):
     isSocialLogin: Mapped[bool] = mapped_column(
         "isSocialLogin", Boolean, default=False, nullable=False
     )
-    
+
     # Timestamps
     createdAt: Mapped[datetime] = mapped_column(
         "createdAt", DateTime, default=datetime.utcnow, nullable=False
@@ -49,11 +49,9 @@ class User(Base):
         onupdate=datetime.utcnow,
         nullable=False,
     )
-    
+
     # OTP fields
-    signupOTP: Mapped[Optional[dict]] = mapped_column(
-        "signupOTP", JSON, nullable=True
-    )
+    signupOTP: Mapped[Optional[dict]] = mapped_column("signupOTP", JSON, nullable=True)
     passwordResetOTP: Mapped[Optional[dict]] = mapped_column(
         "passwordResetOTP", JSON, nullable=True
     )

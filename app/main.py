@@ -1,6 +1,7 @@
 """
 FastAPI application initialization and configuration.
 """
+
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -10,7 +11,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.core.database import engine, init_db
-from app.core.logging import setup_logging, logger
+from app.core.logging import logger, setup_logging
 from app.features.auth.routes import router as auth_router
 from app.features.files.routes import router as files_router
 from app.middleware.error_handler import error_handler_middleware
@@ -34,9 +35,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info(f"🌍 Environment: {settings.ENVIRONMENT}")
     logger.info(f"🔗 Frontend URL: {settings.FRONTEND_URL}")
     logger.info("✅ Server is ready to accept connections!")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("🛑 Shutting down FastAPI Auth Backend...")
     await engine.dispose()
