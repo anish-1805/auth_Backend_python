@@ -14,6 +14,8 @@ from app.core.database import engine, init_db
 from app.core.logging import logger, setup_logging
 from app.features.auth.routes import router as auth_router
 from app.features.files.routes import router as files_router
+from app.features.chatbot.routes import router as chatbot_router
+from app.features.subscription.routes import router as subscription_router
 from app.middleware.error_handler import error_handler_middleware
 from app.middleware.logging import logging_middleware
 from app.middleware.security import security_headers_middleware
@@ -72,6 +74,8 @@ app.middleware("http")(error_handler_middleware)
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(files_router, prefix="/api", tags=["Files"])
+app.include_router(chatbot_router, prefix="/api/chatbot", tags=["Chatbot"])
+app.include_router(subscription_router, prefix="/api/subscription", tags=["Subscription"])
 
 
 @app.get("/", response_class=JSONResponse)

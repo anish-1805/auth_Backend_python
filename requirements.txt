@@ -57,3 +57,6 @@ httpx==0.26.0
 
 # Monitoring & Logging
 structlog==24.1.0
+
+# Payment Processing
+stripe==8.0.0

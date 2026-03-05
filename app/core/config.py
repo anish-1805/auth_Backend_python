@@ -90,6 +90,17 @@ class Settings(BaseSettings):
 
     # Google Gemini AI Configuration
     GEMINI_API_KEY: str = Field(default="", description="Google Gemini API key")
+    
+    # Pollination AI Configuration
+    POLLINATION_AI_API_KEY: str = Field(default="", description="Pollination AI API key")
+
+    # Stripe Configuration
+    STRIPE_SECRET_KEY: str = Field(default="", description="Stripe secret key")
+    STRIPE_PUBLISHABLE_KEY: str = Field(default="", description="Stripe publishable key")
+    STRIPE_WEBHOOK_SECRET: str = Field(default="", description="Stripe webhook secret")
+    STRIPE_BASIC_PRICE_ID: str = Field(default="", description="Stripe Basic plan price ID")
+    STRIPE_STANDARD_PRICE_ID: str = Field(default="", description="Stripe Standard plan price ID")
+    STRIPE_PREMIUM_PRICE_ID: str = Field(default="", description="Stripe Premium plan price ID")
 
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = Field(default=True, description="Enable rate limiting")
